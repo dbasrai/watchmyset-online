@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Watch My Set</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<form method="POST">
+  <label for="yt_url">Paste YouTube URL</label><br>
+  <input type"text" id="yt_url" name = "yt_url">
+</form>
+{% if _input %}
+<div class = "container">
+  <p>Laugh Percentage = {{_laughPercent}}%</p>
+  <p>Number of Laughs = {{_numLaughs}}</p>
+  <p>Laughs per Minute = {{_laughsPerMin}}</p>
+  <ul>
+    {% for n in _laughTimesList %}
+    <li>{{n}}</li>
+    {% endfor %}
+  </ul>
+  <h2>Analysis</h2>
+  <p>{{_analysis}}</p>
+</div>
+{% endif %}
+</body>
+</html>

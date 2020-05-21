@@ -130,11 +130,11 @@ def predict(url):
       laughTimesList.append('{0} minutes '.format(minutes) + 'and {0} seconds'.format(seconds))
 
     laughsPerMin = numLaughs / (y_guess.size/60)
+    laughsPerMin = round(laughsPerMin, 1)
 
     print('\n{0} stats'.format(title))
     print('Laugh Percentage = {0}%'.format(laughPercent))
     print('Num Laughs = {0}'.format(numLaughs))
-    print('Laughs Per Minute (LPM) = {0}'.format(round(laughsPerMin, 1)))
     print("\n".join(laughTimesList))
 
     plt.rcParams["figure.figsize"] = (50,10)
@@ -146,5 +146,6 @@ def predict(url):
     yaxis = y_guess
     step(xaxis, yaxis)
     plt.plot
+    return laughPercent, numLaughs, laughsPerMin, laughTimesList  
 
-    return ("/n".join(laughTimesList))
+
