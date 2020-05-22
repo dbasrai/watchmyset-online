@@ -55,12 +55,12 @@ def delete_path(path):
           shutil.rmtree(os.path.join(root, d))
 
 def predict(url):
-    output_path = '/home/watch_my_set/bucket/youtube'
     chunk_path = '/home/watch_my_set/chunks'
     prediction_path = '/home/watch_my_set/bucket/predictions'
     model_path = '/home/watch_my_set/bucket/model'
-    yt_url = url
-
+    url  = url
+    yt_url = f'https://youtu.be/{url}'
+    output_path = f'/home/watch_my_set/youtube/{url}'
     ydl_opts = {
         'outtmpl': os.path.join(output_path, '%(title)s-%(id)s.%(ext)s'),
         'format': 'bestaudio/best',
@@ -82,7 +82,7 @@ def predict(url):
         if filename.endswith(".wav"):
           title, chunkname_list = gen_chunks(f'{output_path}/{filename}', chunk_path)
 
-    delete_path(output_path)
+    shutil.rmtree(output_path)
 
     X_pred_list = []
     _min, _max = float('inf'), -float('inf')
@@ -137,15 +137,32 @@ def predict(url):
     print('Num Laughs = {0}'.format(numLaughs))
     print("\n".join(laughTimesList))
 
-    plt.rcParams["figure.figsize"] = (50,10)
-    plt.title('Laughs Over Time')
-    xaxis = np.arange(0, y_guess.shape[0])
-    plt.xticks(np.arange(min(xaxis), max(xaxis)+1, 5.0))
-    frame1 = plt.gca()
-    frame1.axes.get_yaxis().set_visible(False)
-    yaxis = y_guess
-    step(xaxis, yaxis)
-    plt.plot
-    return laughPercent, numLaughs, laughsPerMin, laughTimesList  
+    plt.rcParams["figure.figsize"] = (3,1)
+    x_axis = []
+    y_axis = []
+    for i in range(y_guess.size-1):
+      minutes = str(np.floor_divide(i, 60))
+      seconds = str(np.mod(i, 60))
+      if minutes=='0':
+        x_axis.append('' + seconds)
+      else:
+        x_axis.append('' + minutes + ':' + seconds) 
+      if y_guess[i]==0:
+        y_axis.append('silence')
+      else:
+        y_axis.append('laughter')
+
+    fig, ax = plt.subplots()
+    ax.step(x_axis, y_axis)
+
+
+    plt.xlim([0, y_guess.shape[0]]);
+    plt.ylim([-.05,1.05]);
+    plt.yticks(fontsize=16);
+    plt.xticks(fontsize=8)
+    plt.xticks(np.arange(0, y_guess.shape[0], 10)); 
+    plt.fill_between(x_axis, y_axis, step="pre", alpha=0.2)
+    plt.savefig(f'/home/watch_my_set/bucket/plots/{url}.png', dpi=300)
+    return laughPercent, numLaughs, laughsPerMin, laughTimesList, laughTimes
 
 

@@ -13,15 +13,18 @@
   <input type"text" id="yt_url" name = "yt_url">
 </form>
 {% if _input %}
+{% set iterator = 0 %}
 <div class = "container">
   <p>Laugh Percentage = {{_laughPercent}}%</p>
   <p>Number of Laughs = {{_numLaughs}}</p>
   <p>Laughs per Minute = {{_laughsPerMin}}</p>
   <ul>
     {% for n in _laughTimesList %}
-    <li>{{n}}</li>
+    <li>{{n}}: <a href="https://youtu.be/{{_url}}?t={{_laughTimes[loop.index-1]-1}}">Link</a></li>
+    {% set iterator = iterator + 1 %}
     {% endfor %}
   </ul>
+  <img src='https://storage.cloud.google.com/watchmysetbucket/plots/{{_url}}.png'>
   <h2>Analysis</h2>
   <p>{{_analysis}}</p>
 </div>
